@@ -17,11 +17,11 @@ export class NewsSourceEntity {
 
     readonly id: number;
     readonly name: string;
-    readonly type: string;
+    readonly type: Type;
     readonly url: string;
     readonly tags: string[];
 
-    constructor(id: number, name: string, type: string, url: string, tags: string[]) {
+    constructor(id: number, name: string, type: Type, url: string, tags: string[]) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -29,3 +29,5 @@ export class NewsSourceEntity {
         this.tags = tags;
     }
 }
+
+enum Type { Rss, Finmarket }
