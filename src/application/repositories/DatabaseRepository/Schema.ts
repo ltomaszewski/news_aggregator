@@ -1,6 +1,6 @@
 import * as r from 'rethinkdb';
 import { DatabaseRepository } from './DatabaseRepository';
-import { SampleEntity } from '../../../application/entities/SampleEntity';
+import { SampleEntity } from '../../entities/NewsEntity';
 
 // Schema - responsible for database schema migration
 export class Schema {

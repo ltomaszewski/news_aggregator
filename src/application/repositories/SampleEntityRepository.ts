@@ -1,5 +1,5 @@
 import { EntityFactory } from "../entities/EntityFactory";
-import { SampleEntity } from "../entities/SampleEntity";
+import { SampleEntity } from "../entities/NewsEntity";
 import { Repository } from "../interfaces/Repository";
 import { DatabaseRepository } from "./DatabaseRepository/DatabaseRepository";
 

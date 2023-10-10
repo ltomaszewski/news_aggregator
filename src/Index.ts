@@ -36,7 +36,7 @@ console.log("Application started with configuration: " + configuration.arg1 + ",
 import { DatabaseRepository } from "./application/repositories/DatabaseRepository/DatabaseRepository";
 import { DatabaseHost, DatabasePort } from "./config/Constants";
 import { SampleEntityRepository } from "./application/repositories/SampleEntityRepository";
-import { SampleEntity } from "./application/entities/SampleEntity";
+import { SampleEntity } from "./application/entities/NewsEntity";
 
 // Asynchronous function for database operations
 (async () => {
