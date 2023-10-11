@@ -1,10 +1,10 @@
-// TODO: Design facade
-// This will act as the main controller that will retrieve news from any emitter.
-// At first, there will be two emitters: one for RSS and another for FinMarket
-
-// TODO: when rss integration is in palce, new pice of code to open the link to content should be implmented with way to read it and summirize with AI
+// TODO: Finish RSS integration
 
 // TODO: Integration of economic calendar, it should act as knowledge source when news shoudl arrive or, when use webscrbe to fetch dedicated data for analyze
+
+// TODO: Add Android integration via NotificationListenerService on android via emulator or real device
+
+// TODO: when rss integration is in palce, new pice of code to open the link to content should be implmented with way to read it and summirize with AI
 
 // TODO: System to fetch data from custom website, like i.e. Fed website and minutes release. All of them should be downloader and analized with AI and compared between automaticly
 
