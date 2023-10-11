@@ -4,6 +4,10 @@
 
 // TODO: when rss integration is in palce, new pice of code to open the link to content should be implmented with way to read it and summirize with AI
 
+// TODO: Integration of economic calendar, it should act as knowledge source when news shoudl arrive or, when use webscrbe to fetch dedicated data for analyze
+
+// TODO: System to fetch data from custom website, like i.e. Fed website and minutes release. All of them should be downloader and analized with AI and compared between automaticly
+
 // Importing CLIConfiguration class for handling Command Line Interface (CLI) arguments
 import { CLIConfiguration } from "./config/CLIConfiguration";
 
