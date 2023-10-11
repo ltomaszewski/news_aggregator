@@ -1,12 +1,8 @@
-// TODO: Create same with two or three source to save in database on load
-
-// TODO: Add database access adjustments
-// Validate everything is created with dummy data.
-// Double check if develop and production modes work to make sure next step of development gonna work
-
 // TODO: Design facade
 // This will act as the main controller that will retrieve news from any emitter.
 // At first, there will be two emitters: one for RSS and another for FinMarket
+
+// TODO: when rss integration is in palce, new pice of code to open the link to content should be implmented with way to read it and summirize with AI
 
 // Importing CLIConfiguration class for handling Command Line Interface (CLI) arguments
 import { CLIConfiguration } from "./config/CLIConfiguration";
@@ -23,6 +19,7 @@ import { DatabaseForceDrop, DatabaseHost, DatabasePort } from "./config/Constant
 import { SourceRepository } from "./application/repositories/SourceRepository";
 import { Source, NewsSourceEntityType } from "./application/entities/Source";
 import { RssEmiter } from "./application/services/Rss/RssEmiter";
+import { findProp } from "./application/helpers/Utils";
 
 // Asynchronous function for database operations
 (async () => {
@@ -46,13 +43,24 @@ import { RssEmiter } from "./application/services/Rss/RssEmiter";
         const papSource = new Source(0, "pap", NewsSourceEntityType.Rss, "https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml", ["gpw", "pl"])
         newsSourceEntityRepository.insert(papSource)
 
-        const investingCom = new Source(1, "investing.com", NewsSourceEntityType.Rss, "https://pl.investing.com/rss/market_overview_Fundamental.rss", ["investing"])
+        const investingCom = new Source(1, "investing.com", NewsSourceEntityType.Rss, "https://investing.com/rss/market_overview_Fundamental.rss", ["investing"])
         newsSourceEntityRepository.insert(investingCom)
+
+        const yahooFinance = new Source(2, "investing.com", NewsSourceEntityType.Rss, "https://finance.yahoo.com/news/rssindex", ["yahoo"])
+        newsSourceEntityRepository.insert(yahooFinance)
+
+        const wsj = new Source(3, "wsj.com", NewsSourceEntityType.Rss, "https://feeds.a.dj.com/rss/RSSWorldNews.xml", ["us"])
+        newsSourceEntityRepository.insert(wsj)
     }
 
     const rssEmiter = new RssEmiter()
-    rssEmiter.add("https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml")
+    rssEmiter.add("https://feeds.a.dj.com/rss/RSSWorldNews.xml")
     rssEmiter.on(function (object: any) {
-        console.log(object)
+        console.log(object["title"])
+        console.log(object["link"])
+        console.log(object["description"])
+        console.log(findProp(object, "rss:description.#"))
+        console.log(findProp(object, "rss:pubdate.#"))
+        console.log(findProp(object, "meta.link"))
     })
 })();
