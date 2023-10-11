@@ -22,6 +22,7 @@ import { DatabaseRepository } from "./application/repositories/DatabaseRepositor
 import { DatabaseForceDrop, DatabaseHost, DatabasePort } from "./config/Constants";
 import { SourceRepository } from "./application/repositories/SourceRepository";
 import { Source, NewsSourceEntityType } from "./application/entities/Source";
+import { RssEmiter } from "./application/services/Rss/RssEmiter";
 
 // Asynchronous function for database operations
 (async () => {
@@ -48,5 +49,10 @@ import { Source, NewsSourceEntityType } from "./application/entities/Source";
         const investingCom = new Source(1, "investing.com", NewsSourceEntityType.Rss, "https://pl.investing.com/rss/market_overview_Fundamental.rss", ["investing"])
         newsSourceEntityRepository.insert(investingCom)
     }
-    process.exit(0);
+
+    const rssEmiter = new RssEmiter()
+    rssEmiter.add("https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml")
+    rssEmiter.on(function (object: any) {
+        console.log(object)
+    })
 })();
