@@ -16,7 +16,7 @@ export class CLIConfiguration {
     static fromCommandLineArguments(argv: string[]): CLIConfiguration {
         // Extracting value of arg1 from command line arguments
         const args = argv.find(arg => arg.startsWith('--arg1='))?.split('=')[1];
-        
+
         // Checking if production mode flag is present in command line arguments
         const producationMode = argv.find(arg => arg.includes('--runmode=producation'));
 
@@ -30,16 +30,4 @@ export class CLIConfiguration {
             throw new Error("Fatal error: Configuration argument not provided.");
         }
     }
-
-    // Getter method to compute the database name based on the environment
-    get databaseName(): string {
-        if (this.env === Env.Dev) {
-            // If in development environment, return the dev_sampleDB name
-            return "dev_sampleDB".replace(".", "_");
-        } else {
-            // If in production environment, return the sampleDB name
-            return "sampleDB".replace(".", "_");
-        }
-    }
 }
-

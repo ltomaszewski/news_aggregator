@@ -1,15 +1,3 @@
-// TODO: Create Source Entity
-// Definition of entity responsible to describe source of information.
-// Fields: id, name, type [rss, finmarkets], url, data, tag
-
-// TODO: Create New Entity
-// Here every sourceEntity has its own table with news.
-// Every table should be named by source name from Source Entity.
-
-// TODO: Create Repositories
-// Create SourceEntityRepository and NewsEntityRepository.
-// NewsEntityRepository should support go around any news sources.
-
 // TODO: Create same with two or three source to save in database on load
 
 // TODO: Add database access adjustments
@@ -29,52 +17,36 @@ const args = process.argv;
 // Creating CLIConfiguration object from the extracted CLI arguments
 export const configuration: CLIConfiguration = CLIConfiguration.fromCommandLineArguments(args);
 
-// Logging the configuration details
-console.log("Application started with configuration: " + configuration.arg1 + ", environment: " + configuration.env);
-
 // Importing necessary modules and classes for database integration
 import { DatabaseRepository } from "./application/repositories/DatabaseRepository/DatabaseRepository";
-import { DatabaseHost, DatabasePort } from "./config/Constants";
-import { SampleEntityRepository } from "./application/repositories/SampleEntityRepository";
-import { SampleEntity } from "./application/entities/NewsEntity";
+import { DatabaseForceDrop, DatabaseHost, DatabasePort } from "./config/Constants";
+import { NewsSourceEntityRepository } from "./application/repositories/NewsSourceEntityRepository";
+import { NewsSourceEntity, NewsSourceEntityType } from "./application/entities/NewsSourceEntity";
 
 // Asynchronous function for database operations
 (async () => {
     // Database connection details
-    const databaseName = "TralalaTestowaBaza";
+    const baseDatabaseName = "NEWS_AGGREGATOR";
+    const databaseName = `${configuration.env}${baseDatabaseName}`;
 
     // Creating DatabaseRepository instance for database connection
-    const databaseRepository = new DatabaseRepository(DatabaseHost, DatabasePort, true);
+    const databaseRepository = new DatabaseRepository(DatabaseHost, DatabasePort, DatabaseForceDrop);
 
     // Establishing connection to the specified database
     await databaseRepository.connect(databaseName);
 
-    // Creating SampleEntityRepository instance for database operations
-    const sampleEntityRepository = new SampleEntityRepository(databaseRepository, databaseName);
+    // Creating NewSourceEnityRepository instance for database operations
+    const newsSourceEntityRepository = new NewsSourceEntityRepository(databaseRepository, databaseName)
 
-    // Creating sample entities for insertion
-    const firstEntry = new SampleEntity(1, "jeden");
-    const secondEntry = new SampleEntity(2, "dwa");
+    const newsSources = await newsSourceEntityRepository.getAll()
 
-    // Inserting the first entity into the database
-    await sampleEntityRepository.insert(firstEntry);
+    if (newsSources.length == 0) {
+        // Create test pap source 
+        const papSource = new NewsSourceEntity(0, "pap", NewsSourceEntityType.Rss, "https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml", ["gpw", "pl"])
+        newsSourceEntityRepository.insert(papSource)
 
-    // Retrieving all sample entities from the database for validation
-    const allSampleEntities = await sampleEntityRepository.getAll();
-    console.log("All sample entities after insertion: ", allSampleEntities);
-
-    // Updating the first entity in the database
-    const updatedFirstEntry = new SampleEntity(firstEntry.id, "Jeden after updated");
-    await sampleEntityRepository.update(updatedFirstEntry);
-
-    // Retrieving all sample entities after update for validation
-    const allSampleEntitiesAfterUpdate = await sampleEntityRepository.getAll();
-    console.log("All sample entities after update: ", allSampleEntitiesAfterUpdate);
-
-    // Deleting the first entity from the database
-    await sampleEntityRepository.delete(firstEntry);
-
-    // Retrieving all sample entities after deletion for validation
-    const allSampleEntitiesAfterDelete = await sampleEntityRepository.getAll();
-    console.log("All sample entities after deletion: ", allSampleEntitiesAfterDelete);
+        const investingCom = new NewsSourceEntity(1, "investing.com", NewsSourceEntityType.Rss, "https://pl.investing.com/rss/market_overview_Fundamental.rss", ["investing"])
+        newsSourceEntityRepository.insert(investingCom)
+    }
+    process.exit(0);
 })();
