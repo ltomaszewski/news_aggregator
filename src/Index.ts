@@ -20,8 +20,8 @@ export const configuration: CLIConfiguration = CLIConfiguration.fromCommandLineA
 // Importing necessary modules and classes for database integration
 import { DatabaseRepository } from "./application/repositories/DatabaseRepository/DatabaseRepository";
 import { DatabaseForceDrop, DatabaseHost, DatabasePort } from "./config/Constants";
-import { NewsSourceEntityRepository } from "./application/repositories/NewsSourceEntityRepository";
-import { NewsSourceEntity, NewsSourceEntityType } from "./application/entities/NewsSourceEntity";
+import { SourceRepository } from "./application/repositories/SourceRepository";
+import { Source, NewsSourceEntityType } from "./application/entities/Source";
 
 // Asynchronous function for database operations
 (async () => {
@@ -36,16 +36,16 @@ import { NewsSourceEntity, NewsSourceEntityType } from "./application/entities/N
     await databaseRepository.connect(databaseName);
 
     // Creating NewSourceEnityRepository instance for database operations
-    const newsSourceEntityRepository = new NewsSourceEntityRepository(databaseRepository, databaseName)
+    const newsSourceEntityRepository = new SourceRepository(databaseRepository, databaseName)
 
     const newsSources = await newsSourceEntityRepository.getAll()
 
     if (newsSources.length == 0) {
         // Create test pap source 
-        const papSource = new NewsSourceEntity(0, "pap", NewsSourceEntityType.Rss, "https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml", ["gpw", "pl"])
+        const papSource = new Source(0, "pap", NewsSourceEntityType.Rss, "https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml", ["gpw", "pl"])
         newsSourceEntityRepository.insert(papSource)
 
-        const investingCom = new NewsSourceEntity(1, "investing.com", NewsSourceEntityType.Rss, "https://pl.investing.com/rss/market_overview_Fundamental.rss", ["investing"])
+        const investingCom = new Source(1, "investing.com", NewsSourceEntityType.Rss, "https://pl.investing.com/rss/market_overview_Fundamental.rss", ["investing"])
         newsSourceEntityRepository.insert(investingCom)
     }
     process.exit(0);

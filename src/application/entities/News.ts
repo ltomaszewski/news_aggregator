@@ -1,7 +1,6 @@
-export class NewsEntity {
-    
+export class News {
     static Schema = {
-        name: "NewsEntity",
+        name: "News",
         properties: {
             id: 'id',
             id_source: 'id_source',
@@ -12,8 +11,8 @@ export class NewsEntity {
         },
     };
 
-    static createFromObject(object: any): NewsEntity {
-        return new NewsEntity(object.id, object.id_source, object.headline, object.text, object.url, object.tags);
+    static createFromObject(object: any): News {
+        return new News(object.id, object.id_source, object.headline, object.text, object.url, object.tags);
     }
 
     readonly id: number;

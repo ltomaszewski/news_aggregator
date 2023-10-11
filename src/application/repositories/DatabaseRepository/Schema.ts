@@ -1,6 +1,6 @@
 import * as r from 'rethinkdb';
 import { DatabaseRepository } from './DatabaseRepository';
-import { NewsSourceEntity } from '../../entities/NewsSourceEntity';
+import { Source } from '../../entities/Source';
 
 // Schema - responsible for database schema migration
 export class Schema {
@@ -14,10 +14,11 @@ export class Schema {
 
     async updateSchemaIfNeeded(dropAllFirst: boolean = false) {
         if (dropAllFirst) {
-            await this.databaseRepository.dropDatabaseIfExists(this.databaseName)
+            await this.databaseRepository.dropTableIfExists(this.databaseName, Source.Schema.name);
+            await this.databaseRepository.dropDatabaseIfExists(this.databaseName);
         }
 
-        await this.databaseRepository.createDatabaseIfNotExists(this.databaseName)
-        await this.databaseRepository.createTableIfNotExists(this.databaseName, NewsSourceEntity.Schema.name)
+        await this.databaseRepository.createDatabaseIfNotExists(this.databaseName);
+        await this.databaseRepository.createTableIfNotExists(this.databaseName, Source.Schema.name);
     }
 }
