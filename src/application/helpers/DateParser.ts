@@ -3,7 +3,7 @@ import { getUnixTime } from "date-fns";
 export class DateParser {
     parse(rawDate: string): number {
         const result = new Date(rawDate);
-        if (typeof result === 'object' && result instanceof Date) {
+        if (!isNaN(result.getTime())) {
             return getUnixTime(result)
         } else {
             const customParse = this.parseDateString(rawDate);
