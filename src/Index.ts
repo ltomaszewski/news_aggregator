@@ -24,13 +24,14 @@ import { SourceRepository } from "./application/repositories/SourceRepository";
 import { Source, NewsSourceEntityType } from "./application/entities/Source";
 import { RssEmiter } from "./application/services/Rss/RssEmiter";
 import { findProp } from "./application/helpers/Utils";
-import { DateParser } from "./application/helpers/DateParser";
+import { DateUtils } from "./application/helpers/DateParser";
 import { getUnixTime } from "date-fns";
 import { da } from "date-fns/locale";
+import { RssService } from "./application/services/Rss/RssService";
 
 // Asynchronous function for database operations
 (async () => {
-    const dateParser = new DateParser()
+    const dateParser = new DateUtils()
 
     // Database connection details
     const baseDatabaseName = "NEWS_AGGREGATOR";
@@ -55,33 +56,20 @@ import { da } from "date-fns/locale";
         const investingCom = new Source(1, "investing.com", NewsSourceEntityType.Rss, "https://investing.com/rss/market_overview_Fundamental.rss", ["investing"])
         newsSourceEntityRepository.insert(investingCom)
 
-        const yahooFinance = new Source(2, "investing.com", NewsSourceEntityType.Rss, "https://finance.yahoo.com/news/rssindex", ["yahoo"])
+        const yahooFinance = new Source(2, "yahoo.finance", NewsSourceEntityType.Rss, "https://finance.yahoo.com/news/rssindex", ["yahoo"])
         newsSourceEntityRepository.insert(yahooFinance)
 
         const wsj = new Source(3, "wsj.com", NewsSourceEntityType.Rss, "https://feeds.a.dj.com/rss/RSSWorldNews.xml", ["us"])
         newsSourceEntityRepository.insert(wsj)
     }
 
-    const rssEmiter = new RssEmiter()
-    rssEmiter.add("https://feeds.a.dj.com/rss/RSSWorldNews.xml", "wsj")
-    rssEmiter.on("wsj", function (object: any) {
-        const date = findProp(object, "rss:pubdate.#")
-        const customTimestamp = dateParser.parse(date)
-        console.log("WSJ: " + customTimestamp + " CP: " + date + " Title: " + object["title"] + " findPropDescription " + findProp(object, "rss:description.#"))
+    const rssService = new RssService()
+    rssService.setCallback((rssItem) => {
+        console.log(rssItem);
     })
-
-    rssEmiter.add("https://investing.com/rss/market_overview_Fundamental.rss", "investing")
-    rssEmiter.on("investing", function (object: any) {
-        const date = findProp(object, "rss:pubdate.#")
-        const customTimestamp = dateParser.parse(date)
-        console.log("Investing: " + customTimestamp + " CP: " + date + " Title: " + object["title"] + " findPropDescription " + findProp(object, "description"))
-    })
-
-    rssEmiter.add("https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml", "pap")
-    rssEmiter.on("pap", function (object: any) {
-        const date = findProp(object, "rss:pubdate.#");
-        const customTimestamp = dateParser.parse(date)
-        console.log("Pap: " + customTimestamp + " CP: " + date + " Title: " + object["title"] + " findPropDescription " + findProp(object, "description"))
-    })
+    const sources = await newsSourceEntityRepository.getAll()
+    for (const source of sources) {
+        rssService.add(source)
+    }
 })();
 

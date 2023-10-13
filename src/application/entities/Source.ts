@@ -19,8 +19,9 @@ export class Source {
     readonly type: NewsSourceEntityType;
     readonly url: string;
     readonly tags: string[];
+    // TODO:
     // Custom configuration i.e. for rss source where some elements are not parsed on it self right. Format {destinationField}:{custom_object_Field}
-    // Small unit test is needed to validate schema of any rss link
+    // Small unit test is needed to validate schema of any rss link. Support is not implemented yet
     readonly adjustments: string[];
 
     constructor(id: number, name: string, type: NewsSourceEntityType, url: string, tags: string[], adjustments: string[] = []) {

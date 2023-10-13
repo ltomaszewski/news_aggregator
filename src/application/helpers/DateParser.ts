@@ -1,6 +1,7 @@
 import { getUnixTime } from "date-fns";
 
-export class DateParser {
+export class DateUtils {
+
     parse(rawDate: string): number {
         const result = new Date(rawDate);
         if (!isNaN(result.getTime())) {
@@ -9,6 +10,10 @@ export class DateParser {
             const customParse = this.parseDateString(rawDate);
             return getUnixTime(customParse)
         }
+    }
+
+    public get currentTime(): number {
+        return getUnixTime(new Date());
     }
 
     private parseDateString(dateString: string): Date {
