@@ -24,9 +24,14 @@ import { SourceRepository } from "./application/repositories/SourceRepository";
 import { Source, NewsSourceEntityType } from "./application/entities/Source";
 import { RssEmiter } from "./application/services/Rss/RssEmiter";
 import { findProp } from "./application/helpers/Utils";
+import { DateParser } from "./application/helpers/DateParser";
+import { getUnixTime } from "date-fns";
+import { da } from "date-fns/locale";
 
 // Asynchronous function for database operations
 (async () => {
+    const dateParser = new DateParser()
+
     // Database connection details
     const baseDatabaseName = "NEWS_AGGREGATOR";
     const databaseName = `${configuration.env}${baseDatabaseName}`;
@@ -58,13 +63,25 @@ import { findProp } from "./application/helpers/Utils";
     }
 
     const rssEmiter = new RssEmiter()
-    rssEmiter.add("https://feeds.a.dj.com/rss/RSSWorldNews.xml")
-    rssEmiter.on(function (object: any) {
-        console.log(object["title"])
-        console.log(object["link"])
-        console.log(object["description"])
-        console.log(findProp(object, "rss:description.#"))
-        console.log(findProp(object, "rss:pubdate.#"))
-        console.log(findProp(object, "meta.link"))
+    rssEmiter.add("https://feeds.a.dj.com/rss/RSSWorldNews.xml", "wsj")
+    rssEmiter.on("wsj", function (object: any) {
+        const date = findProp(object, "rss:pubdate.#")
+        const customTimestamp = dateParser.parse(date)
+        console.log("WSJ: " + customTimestamp + " CP: " + date + " Title: " + object["title"] + " findPropDescription " + findProp(object, "rss:description.#"))
+    })
+
+    rssEmiter.add("https://investing.com/rss/market_overview_Fundamental.rss", "investing")
+    rssEmiter.on("investing", function (object: any) {
+        const date = findProp(object, "rss:pubdate.#")
+        const customTimestamp = dateParser.parse(date)
+        console.log("Investing: " + customTimestamp + " CP: " + date + " Title: " + object["title"] + " findPropDescription " + findProp(object, "description"))
+    })
+
+    rssEmiter.add("https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml", "pap")
+    rssEmiter.on("pap", function (object: any) {
+        const date = findProp(object, "rss:pubdate.#");
+        const customTimestamp = dateParser.parse(date)
+        console.log("Pap: " + customTimestamp + " CP: " + date + " Title: " + object["title"] + " findPropDescription " + findProp(object, "description"))
     })
 })();
+

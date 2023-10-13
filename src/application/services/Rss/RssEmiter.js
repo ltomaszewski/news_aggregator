@@ -5,18 +5,19 @@ export class RssEmiter {
 
     constructor() {
         this.feeder = new RssFeedEmitter({ skipFirstLoad: false });
+        this.feeder.on('error', console.error);
     }
 
-    add(url) {
+    add(url, eventName) {
         this.feeder.add({
             url: url,
-            refresh: 2000
+            refresh: 2000,
+            eventName: eventName
         });
     }
 
-    on(onNewItem) {
-        this.feeder.on('error', console.error);
-        this.feeder.on('new-item', onNewItem);
+    on(eventName, onNewItem) {
+        this.feeder.on(eventName, onNewItem);
     }
 
     destroy() {
