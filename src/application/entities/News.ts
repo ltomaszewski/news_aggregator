@@ -4,7 +4,7 @@ export class News {
         properties: {
             id: 'id',
             id_source: 'id_source',
-            headline: 'headline',
+            title: 'title',
             text: 'text',
             url: 'url',
             tags: 'tags'
@@ -17,15 +17,15 @@ export class News {
 
     readonly id: number;
     readonly id_source: string;
-    readonly headline: string;
+    readonly title: string;
     readonly text: string;
     readonly url: string;
     readonly tags: string[];
 
-    constructor(id: number, id_source: string, headline: string, text: string, url: string, tags: string[]) {
+    constructor(id: number, id_source: string, title: string, text: string, url: string, tags: string[]) {
         this.id = id;
         this.id_source = id_source;
-        this.headline = headline;
+        this.title = title;
         this.text = text;
         this.url = url;
         this.tags = tags;

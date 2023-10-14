@@ -28,6 +28,9 @@ import { DateUtils } from "./application/helpers/DateParser";
 import { getUnixTime } from "date-fns";
 import { da } from "date-fns/locale";
 import { RssService } from "./application/services/Rss/RssService";
+import { SourceService } from "./application/services/SourceService";
+import { NewsService } from "./application/services/NewsService";
+import { NewsRepository } from "./application/repositories/NewsRepository";
 
 // Asynchronous function for database operations
 (async () => {
@@ -43,31 +46,23 @@ import { RssService } from "./application/services/Rss/RssService";
     // Establishing connection to the specified database
     await databaseRepository.connect(databaseName);
 
-    // Creating NewSourceEnityRepository instance for database operations
-    const newsSourceEntityRepository = new SourceRepository(databaseRepository, databaseName)
+    // Creating all repositories and services
+    const sourceRepository = new SourceRepository(databaseRepository, databaseName);
+    const newsRepository = new NewsRepository(databaseRepository, databaseName);
+    const sourceService = new SourceService(sourceRepository);
+    const newsService = new NewsService(newsRepository);
+    const rssService = new RssService();
 
-    const newsSources = await newsSourceEntityRepository.getAll()
+    // Init if empty some default sources
+    await sourceService.insertDefaultSourcesIfNeeded();
 
-    if (newsSources.length == 0) {
-        // Create test pap source 
-        const papSource = new Source(0, "pap", NewsSourceEntityType.Rss, "https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml", ["gpw", "pl"])
-        newsSourceEntityRepository.insert(papSource)
-
-        const investingCom = new Source(1, "investing.com", NewsSourceEntityType.Rss, "https://investing.com/rss/market_overview_Fundamental.rss", ["investing"])
-        newsSourceEntityRepository.insert(investingCom)
-
-        const yahooFinance = new Source(2, "yahoo.finance", NewsSourceEntityType.Rss, "https://finance.yahoo.com/news/rssindex", ["yahoo"])
-        newsSourceEntityRepository.insert(yahooFinance)
-
-        const wsj = new Source(3, "wsj.com", NewsSourceEntityType.Rss, "https://feeds.a.dj.com/rss/RSSWorldNews.xml", ["us"])
-        newsSourceEntityRepository.insert(wsj)
-    }
-
-    const rssService = new RssService()
+    // Setup callback for RssService to save new rssItem to database
     rssService.setCallback((rssItem) => {
-        console.log(rssItem);
+        newsService.saveRssItem(rssItem);
     })
-    const sources = await newsSourceEntityRepository.getAll()
+
+    // Add already existing sources to the RssService
+    const sources = await sourceRepository.getAll();
     for (const source of sources) {
         rssService.add(source)
     }

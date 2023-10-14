@@ -19,18 +19,20 @@ export class Source {
     readonly type: NewsSourceEntityType;
     readonly url: string;
     readonly tags: string[];
+    readonly contentXpath: string;
     // TODO:
     // Custom configuration i.e. for rss source where some elements are not parsed on it self right. Format {destinationField}:{custom_object_Field}
     // Small unit test is needed to validate schema of any rss link. Support is not implemented yet
     readonly adjustments: string[];
 
-    constructor(id: number, name: string, type: NewsSourceEntityType, url: string, tags: string[], adjustments: string[] = []) {
+    constructor(id: number, name: string, type: NewsSourceEntityType, url: string, tags: string[], adjustments: string[] = [], contentXpath: string = "") {
         this.id = id;
         this.name = name;
         this.type = type;
         this.url = url;
         this.tags = tags;
         this.adjustments = adjustments
+        this.contentXpath = contentXpath
     }
 }
 
