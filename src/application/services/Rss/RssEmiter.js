@@ -16,6 +16,10 @@ export class RssEmiter {
         });
     }
 
+    remove(url) {
+        this.feeder.remove(url)
+    }
+
     on(eventName, onNewItem) {
         this.feeder.on(eventName, onNewItem);
     }

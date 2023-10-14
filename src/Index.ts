@@ -31,6 +31,8 @@ import { RssService } from "./application/services/Rss/RssService";
 import { SourceService } from "./application/services/SourceService";
 import { NewsService } from "./application/services/NewsService";
 import { NewsRepository } from "./application/repositories/NewsRepository";
+import express from "express";
+import { RESTSourceService } from "./application/services/REST/RESTSourceService";
 
 // Asynchronous function for database operations
 (async () => {
@@ -54,7 +56,7 @@ import { NewsRepository } from "./application/repositories/NewsRepository";
     const rssService = new RssService();
 
     // Init if empty some default sources
-    await sourceService.insertDefaultSourcesIfNeeded();
+    await sourceService.insertDefaultIfNeeded();
 
     // Setup callback for RssService to save new rssItem to database
     rssService.setCallback((rssItem) => {
@@ -66,5 +68,22 @@ import { NewsRepository } from "./application/repositories/NewsRepository";
     for (const source of sources) {
         rssService.add(source)
     }
-})();
 
+    // Setup REST Server
+    const app = express();
+    app.use(express.json());
+
+    // Install REST services endpoints
+    const restSourceService = new RESTSourceService(sourceService, rssService);
+
+    // Install REST endpoints
+    restSourceService.installEndpoints("/api/v1", app);
+
+    const PORT = process.env.PORT || 696;
+
+    // Start the server
+    app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+    });
+
+})();

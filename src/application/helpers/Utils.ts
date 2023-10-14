@@ -12,3 +12,7 @@ export function findProp(obj: any, prop: string, defval?: any): any {
     }
     return obj;
 }
+
+export function isNumber(value: unknown): value is number {
+    return typeof value === 'number';
+}

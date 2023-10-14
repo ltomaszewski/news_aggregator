@@ -25,6 +25,10 @@ export class RssService {
         this._sources.set(source.name, source)
     }
 
+    remove(source: Source) {
+        this._rssEmiter.remove(source.url)
+    }
+
     setCallback(callback: (item: RssItem) => void): void {
         this._callback = callback;
     }
