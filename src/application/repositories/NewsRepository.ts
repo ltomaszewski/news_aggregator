@@ -30,4 +30,21 @@ export class NewsRepository implements Repository<News> {
     async delete(entity: News) {
         await this.databaseRepository.delete(this.databaseName, News.Schema.name, { id: entity.id })
     }
+
+    async nextId(): Promise<number> {
+        const all = await this.getAll()
+        if (all.length == 0) { return 0 }
+        const ids = all.map((a) => a.id)
+        const maxValue = Math.max(...ids)
+        return maxValue + 1
+    }
+
+    async findNewsWithLink(link: String): Promise<News | null> {
+        const result = await (await this.databaseRepository.query(this.databaseName, News.Schema.name, function (table) { return table.filter({ link: link }) })).toArray();
+        if (result.length > 0) {
+            return result[0]
+        } else {
+            return null
+        }
+    }
 }

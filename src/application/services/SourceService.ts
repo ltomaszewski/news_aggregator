@@ -10,7 +10,6 @@ export class SourceService {
     }
 
     async insertDefaultIfNeeded() {
-        // const papSource = new Source(0, "pap", NewsSourceEntityType.Rss, "https://pap-mediaroom.pl/kategoria/biznes-i-finanse/rss.xml", ["gpw", "pl"]);
         const investingCom = new Source(1, "investing.com", NewsSourceEntityType.Rss, "https://investing.com/rss/market_overview_Fundamental.rss", ["investing"]);
         const yahooFinance = new Source(2, "yahoo.finance", NewsSourceEntityType.Rss, "https://finance.yahoo.com/news/rssindex", ["yahoo"]);
         const wsj = new Source(3, "wsj.com", NewsSourceEntityType.Rss, "https://feeds.a.dj.com/rss/RSSWorldNews.xml", ["us"]);
@@ -31,7 +30,7 @@ export class SourceService {
         }
         const newId = Source.createNewId(allSources);
         const newSource = Source.createFromDTO(sourceDTO, newId);
-        this.sourceRepository.insert(newSource)
+        await this.sourceRepository.insert(newSource)
         return newSource
     }
 
@@ -39,7 +38,7 @@ export class SourceService {
         const allSources = await this.sourceRepository.getAll()
         const source = await allSources.find(x => x.id === id)
         if (source) {
-            this.sourceRepository.delete(source)
+            await this.sourceRepository.delete(source)
             return source
         } else {
             throw Error(`"Source with this ID does not exist"`);

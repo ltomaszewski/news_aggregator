@@ -53,4 +53,4 @@ export class Source {
     }
 }
 
-export enum NewsSourceEntityType { Rss, Finmarket }
+export enum NewsSourceEntityType { Rss, Twitter }

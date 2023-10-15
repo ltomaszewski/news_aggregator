@@ -59,8 +59,8 @@ import { RESTSourceService } from "./application/services/REST/RESTSourceService
     await sourceService.insertDefaultIfNeeded();
 
     // Setup callback for RssService to save new rssItem to database
-    rssService.setCallback((rssItem) => {
-        newsService.saveRssItem(rssItem);
+    rssService.setCallback((rssItems) => {
+        newsService.saveRssItems(rssItems);
     })
 
     // Add already existing sources to the RssService
