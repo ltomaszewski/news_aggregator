@@ -4,18 +4,31 @@ import { RssItem } from "./Rss/RssItem";
 
 export class NewsService {
     private newsRepository: NewsRepository;
+    private rssQueue: RssItem[] = []
+    private isProcessing: boolean = false
 
     constructor(newsRepository: NewsRepository) {
         this.newsRepository = newsRepository;
-    }
-
-    async saveRssItems(rssItems: RssItem[]) {
-        for (let rssItem of rssItems) {
-            await this.saveRssItem(rssItem);
-        }
+        setInterval(async () => {
+            if (this.isProcessing || this.rssQueue.length == 0) {
+                return;
+            }
+            this.isProcessing = true
+            while (this.rssQueue.length > 0) {
+                const rssItem = this.rssQueue.shift()
+                if (rssItem) {
+                    await this.saveRssItemsInDatabase(rssItem)
+                }
+            }
+            this.isProcessing = false
+        }, 500);
     }
 
     async saveRssItem(rssItem: RssItem) {
+        this.rssQueue.push(rssItem)
+    }
+
+    private async saveRssItemsInDatabase(rssItem: RssItem) {
         const alreadyExisitngNews = await this.checkIfExists(rssItem)
         if (alreadyExisitngNews) {
             console.log("News already exists " + rssItem.link + " id: " + alreadyExisitngNews.id);

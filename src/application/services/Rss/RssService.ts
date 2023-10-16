@@ -7,17 +7,7 @@ import { RssItem } from "./RssItem";
 export class RssService {
     private _sources: Map<string, Source> = new Map();
     private _rssEmiter: RssEmiter = new RssEmiter();
-    private _callback: (items: RssItem[]) => void = (items) => { };
-    private _collectedItems: RssItem[] = [];
-
-    constructor() {
-        setInterval(() => {
-            if (this._collectedItems.length > 0) {
-                this._callback(this._collectedItems);
-                this._collectedItems = [];
-            }
-        }, 5000);
-    }
+    private _callback: (items: RssItem) => void = (items) => { };
 
     add(source: Source) {
         this._rssEmiter.add(source.url, source.name);
@@ -25,7 +15,7 @@ export class RssService {
             const rssSource = this._sources.get(source.name);
             if (rssSource) {
                 const rssItem = RssItem.fromObject(item, rssSource);
-                this._collectedItems.push(rssItem);
+                this._callback(rssItem);
             } else {
                 process.exit(0);
             }
@@ -37,7 +27,7 @@ export class RssService {
         this._rssEmiter.remove(source.url);
     }
 
-    setCallback(callback: (items: RssItem[]) => void): void {
+    setCallback(callback: (items: RssItem) => void): void {
         this._callback = callback;
     }
 }
