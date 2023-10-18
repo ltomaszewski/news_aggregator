@@ -32,7 +32,7 @@ import { SourceService } from "./application/services/SourceService";
 import { NewsService } from "./application/services/NewsService";
 import { NewsRepository } from "./application/repositories/NewsRepository";
 import express from "express";
-import { SourceRESTService } from "./application/services/REST/RESTSourceService";
+import { SourceRESTService } from "./application/services/REST/SourceRESTService";
 import { TweetRESTService } from "./application/services/REST/TweetRESTService";
 import { TweetService } from "./application/services/TweetService";
 import { TweetRepository } from "./application/repositories/TweetRepository";
@@ -55,7 +55,7 @@ import { TweetRepository } from "./application/repositories/TweetRepository";
     const sourceRepository = new SourceRepository(databaseRepository, databaseName);
     const newsRepository = new NewsRepository(databaseRepository, databaseName);
     const tweetRepository = new TweetRepository(databaseRepository, databaseName);
-    
+
     const sourceService = new SourceService(sourceRepository);
     const newsService = new NewsService(newsRepository);
     const tweetService = new TweetService(tweetRepository);
