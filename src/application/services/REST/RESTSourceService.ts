@@ -3,7 +3,7 @@ import { SourceService } from "../SourceService";
 import { SourceDTO } from "../../dtos/SourceDTO";
 import { RssService } from "../Rss/RssService";
 
-export class RESTSourceService {
+export class SourceRESTService {
     private sourceService: SourceService
     private rssService: RssService
 

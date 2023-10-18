@@ -32,7 +32,10 @@ import { SourceService } from "./application/services/SourceService";
 import { NewsService } from "./application/services/NewsService";
 import { NewsRepository } from "./application/repositories/NewsRepository";
 import express from "express";
-import { RESTSourceService } from "./application/services/REST/RESTSourceService";
+import { SourceRESTService } from "./application/services/REST/RESTSourceService";
+import { TweetRESTService } from "./application/services/REST/TweetRESTService";
+import { TweetService } from "./application/services/TweetService";
+import { TweetRepository } from "./application/repositories/TweetRepository";
 
 // Asynchronous function for database operations
 (async () => {
@@ -51,8 +54,11 @@ import { RESTSourceService } from "./application/services/REST/RESTSourceService
     // Creating all repositories and services
     const sourceRepository = new SourceRepository(databaseRepository, databaseName);
     const newsRepository = new NewsRepository(databaseRepository, databaseName);
+    const tweetRepository = new TweetRepository(databaseRepository, databaseName);
+    
     const sourceService = new SourceService(sourceRepository);
     const newsService = new NewsService(newsRepository);
+    const tweetService = new TweetService(tweetRepository);
     const rssService = new RssService();
 
     // Init if empty some default sources
@@ -74,10 +80,13 @@ import { RESTSourceService } from "./application/services/REST/RESTSourceService
     app.use(express.json());
 
     // Install REST services endpoints
-    const restSourceService = new RESTSourceService(sourceService, rssService);
+    const baseApi = "/api/v1";
+    const sourceRestService = new SourceRESTService(sourceService, rssService);
+    const tweetRestService = new TweetRESTService(tweetService);
 
     // Install REST endpoints
-    restSourceService.installEndpoints("/api/v1", app);
+    sourceRestService.installEndpoints(baseApi, app);
+    tweetRestService.installEndpoints(baseApi, app);
 
     const PORT = process.env.PORT || 696;
 
