@@ -21,21 +21,6 @@ export class TweetRESTService {
             }
         });
 
-        // Remove a tweet from the database
-        app.delete(basePath + "/tweet/remove/:id", async (req, res) => {
-            const id = parseInt(req.params.id, 10);
-            if (!id) {
-                return res.status(400).json({ message: "Missing required fields." });
-            }
-
-            try {
-                const removedTweet = await this.tweetService.remove(id);
-                res.sendStatus(204);
-            } catch (error: any) {
-                res.status(400).json({ error: error.message });
-            }
-        });
-
         // List all tweets in the database
         app.get(basePath + "/tweet/all", async (req, res) => {
             const allTweets = await this.tweetService.getAll();
