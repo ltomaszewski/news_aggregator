@@ -14,8 +14,8 @@ export class TweetRESTService {
         app.post(basePath + "/tweet/add", async (req, res) => {
             try {
                 const tweetDTO = TweetDTO.createFromObject(req.body);
-                const result = await this.tweetService.save(tweetDTO);
-                res.status(201).json(result);
+                const result = await this.tweetService.enqueueAndSave(tweetDTO);
+                res.status(201).json({ status: "Item has been enqueued for asynchronous saving" });
             } catch (error: any) {
                 res.status(400).json({ error: error.message });
             }
@@ -25,6 +25,11 @@ export class TweetRESTService {
         app.get(basePath + "/tweet/all", async (req, res) => {
             const allTweets = await this.tweetService.getAll();
             res.json(allTweets);
+        });
+
+        // Health ping to let the caller know the service is up
+        app.get(basePath + "/tweet/ping/health", (req, res) => {
+            res.status(201).json({ status: "success" });
         });
     }
 }

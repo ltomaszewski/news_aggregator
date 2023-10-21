@@ -4,9 +4,24 @@ import { TweetRepository } from "../repositories/TweetRepository";
 
 export class TweetService {
     private tweetRepository: TweetRepository;
+    private queue: TweetDTO[] = []
+    private isProcessing: boolean = false
 
     constructor(repository: TweetRepository) {
         this.tweetRepository = repository;
+        setInterval(async () => {
+            if (this.isProcessing || this.queue.length == 0) {
+                return;
+            }
+            this.isProcessing = true
+            while (this.queue.length > 0) {
+                const item = this.queue.shift()
+                if (item) {
+                    await this.save(item)
+                }
+            }
+            this.isProcessing = false
+        }, 500);
     }
 
     async save(tweetDTO: TweetDTO): Promise<Tweet> {
@@ -19,6 +34,10 @@ export class TweetService {
         const newTweet = Tweet.createFromDTO(tweetDTO, newId);
         await this.tweetRepository.insert(newTweet);
         return newTweet;
+    }
+
+    enqueueAndSave(tweetDTO: TweetDTO) {
+        this.queue.push(tweetDTO);
     }
 
     async remove(id: number): Promise<Tweet> {
