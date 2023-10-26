@@ -1,29 +1,33 @@
 export class TweetDTO {
-    readonly androidPackage: string;
+    readonly packageInfo: string;
     readonly ticker: string;
     readonly title: string;
     readonly text: string;
     readonly postTime: number;
-    readonly userId: string;
 
-    constructor(androidPackage: string, ticker: string, title: string, text: string, postTime: number, userId: string) {
-        this.androidPackage = androidPackage;
-        this.ticker = ticker;
+    constructor(packageInfo: string, ticker: string, title: string, text: string, postTime: number) {
+        this.packageInfo = packageInfo;
+        this.ticker = ticker === text ? "" : ticker;
         this.title = title;
         this.text = text;
         this.postTime = postTime;
-        this.userId = userId;
 
-        if (!androidPackage || !ticker || !title || !text || !postTime || !userId) {
-            throw new Error('All fields (androidPackage, ticker, title, text, postTime, userId) are required.');
+        if (!packageInfo || !ticker || !title || !text || !postTime) {
+            throw new Error('All fields (packageInfo, ticker, title, text, postTime, userId) are required.');
         }
     }
 
     static createFromObject(object: any): TweetDTO {
-        if (!object || !object.androidPackage || !object.ticker || !object.title || !object.text || !object.postTime || !object.userId) {
-            throw new Error('All fields (androidPackage, ticker, title, text, postTime, userId) are required.');
+        if (!object || !object.packageInfo || !object.ticker || !object.title || !object.text || !object.postTime) {
+            throw new Error('All fields (packageInfo, ticker, title, text, postTime, userId) are required.');
         }
 
-        return new TweetDTO(object.androidPackage, object.ticker, object.title, object.text, object.postTime, object.userId);
+        return new TweetDTO(object.packageInfo, object.ticker, object.title, object.text, object.postTime);
+    }
+
+    static compareTweets(tweet1: TweetDTO, tweet2: TweetDTO): boolean {
+        return tweet1.ticker === tweet2.ticker &&
+            tweet1.title === tweet2.title &&
+            tweet1.text === tweet2.text;
     }
 }

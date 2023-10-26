@@ -24,10 +24,11 @@ export class TweetService {
         }, 500);
     }
 
-    async save(tweetDTO: TweetDTO): Promise<Tweet> {
-        const tweetClone = await this.tweetRepository.findTweetWithUserIdAndText(tweetDTO.userId, tweetDTO.text)
+    async save(tweetDTO: TweetDTO): Promise<Tweet | null> {
+        const tweetClone = await this.tweetRepository.findTweetWithText(tweetDTO.text, tweetDTO.postTime, tweetDTO.title)
         if (tweetClone) {
-            throw Error(`"Tweet with this link already exists"`);
+            console.log("Tweet with this link already exists: " + tweetDTO);
+            return null
         }
         const allTweets = await this.tweetRepository.getAll()
         const newId = Tweet.createNewId(allTweets);
@@ -37,7 +38,18 @@ export class TweetService {
     }
 
     enqueueAndSave(tweetDTO: TweetDTO) {
-        this.queue.push(tweetDTO);
+        if (!this.isTweetInQueue(tweetDTO)) {
+            this.queue.push(tweetDTO);
+            console.log('Tweet added to the queue:', tweetDTO);
+        } else {
+            console.log('Similar tweet already exists in the queue. Not adding:', tweetDTO);
+        }
+    }
+
+    private isTweetInQueue(tweet: TweetDTO): boolean {
+        return this.queue.some(existingTweet =>
+            TweetDTO.compareTweets(existingTweet, tweet)
+        );
     }
 
     async remove(id: number): Promise<Tweet> {

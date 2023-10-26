@@ -9,13 +9,12 @@ export class Tweet {
             ticker: 'ticker',
             title: 'title',
             text: 'text',
-            postTime: 'postTime',
-            userId: 'userId'
+            postTime: 'postTime'
         },
     };
 
     static createFromObject(object: any): Tweet {
-        return new Tweet(object.id, object.androidPackage, object.ticker, object.title, object.text, object.postTime, object.userId);
+        return new Tweet(object.id, object.androidPackage, object.ticker, object.title, object.text, object.postTime);
     }
 
     readonly id: number;
@@ -24,16 +23,14 @@ export class Tweet {
     readonly title: string;
     readonly text: string;
     readonly postTime: number;
-    readonly userId: string;
 
-    constructor(id: number, androidPackage: string, ticker: string, title: string, text: string, postTime: number, userId: string) {
+    constructor(id: number, androidPackage: string, ticker: string, title: string, text: string, postTime: number) {
         this.id = id;
         this.androidPackage = androidPackage;
         this.ticker = ticker;
         this.title = title;
         this.text = text;
         this.postTime = postTime;
-        this.userId = userId;
     }
 
     static findMaxId(tweets: Tweet[]): number {
@@ -52,6 +49,6 @@ export class Tweet {
     }
 
     static createFromDTO(dto: TweetDTO, newId: number): Tweet {
-        return new Tweet(newId, dto.androidPackage, dto.ticker, dto.title, dto.text, dto.postTime, dto.userId);
+        return new Tweet(newId, dto.packageInfo, dto.ticker, dto.title, dto.text, dto.postTime);
     }
 }
