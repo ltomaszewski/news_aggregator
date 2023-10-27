@@ -2,8 +2,6 @@ import { Source } from "../../entities/Source";
 import { RssEmiter } from "./RssEmiter";
 import { RssItem } from "./RssItem";
 
-// We have problem here, the callback is called before item is saved into databse, that result lost data. It is needed to create queue and save them one by one with waiting for finish.
-
 export class RssService {
     private _sources: Map<string, Source> = new Map();
     private _rssEmiter: RssEmiter = new RssEmiter();

@@ -39,7 +39,7 @@ export class NewsService {
         const id = await this.newsRepository.nextId();
         const id_source = rssItem.source.id;
         const title = rssItem.title;
-        const description = rssItem.description;
+        const description = (rssItem.description || '').replace(/<[^>]*>/g, '');
         const link = rssItem.link;
 
         const news = new News(id, id_source, fetchedAt, publicationDate, title, description, link, []);

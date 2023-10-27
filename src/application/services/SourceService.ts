@@ -1,3 +1,4 @@
+import { DEFAULT_SOURCES } from "../../config/Constants";
 import { SourceDTO } from "../dtos/SourceDTO";
 import { NewsSourceEntityType, Source } from "../entities/Source";
 import { SourceRepository } from "../repositories/SourceRepository";
@@ -10,15 +11,11 @@ export class SourceService {
     }
 
     async insertDefaultIfNeeded() {
-        const investingCom = new Source(1, "investing.com", NewsSourceEntityType.Rss, "https://investing.com/rss/market_overview_Fundamental.rss", ["investing"]);
-        const yahooFinance = new Source(2, "yahoo.finance", NewsSourceEntityType.Rss, "https://finance.yahoo.com/news/rssindex", ["yahoo"]);
-        const wsj = new Source(3, "wsj.com", NewsSourceEntityType.Rss, "https://feeds.a.dj.com/rss/RSSWorldNews.xml", ["us"]);
-        const defaultSources = [investingCom, yahooFinance, wsj];
-        const allSources = await this.sourceRepository.getAll();
-
-        for (let source of defaultSources) {
-            if (!(await allSources).find(x => x.id === source.id)) {
-                await this.sourceRepository.insert(source);
+        for (let source of DEFAULT_SOURCES) {
+            try {
+                await this.save(source)
+            } catch (error) {
+                console.error(error)
             }
         }
     }
