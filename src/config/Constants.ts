@@ -13,6 +13,9 @@ export const DatabasePort = 28015;
 // DatabaseForceDrop - indicates whether the database should be forcefully dropped (true/false)
 export const DatabaseForceDrop = false;
 
+export const baseDatabaseName = "NEWS_AGGREGATOR";
+
+
 export const DEFAULT_SOURCES: SourceDTO[] = [
     SourceDTO.createFromObject({
         name: 'investing.com',

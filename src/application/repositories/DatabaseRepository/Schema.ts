@@ -3,6 +3,11 @@ import { DatabaseRepository } from './DatabaseRepository';
 import { Source } from '../../entities/Source';
 import { News } from '../../entities/News';
 import { Tweet } from '../../entities/Tweet';
+import { configuration } from '../../../Index';
+import { DatabaseHost, DatabasePort, Env, baseDatabaseName } from '../../../config/Constants';
+import { NewsRepository } from '../NewsRepository';
+import { SourceRepository } from '../SourceRepository';
+import { TweetRepository } from '../TweetRepository';
 
 // Schema - responsible for database schema migration
 export class Schema {
@@ -26,6 +31,5 @@ export class Schema {
         await this.databaseRepository.createTableIfNotExists(this.databaseName, Tweet.Schema.name);
         await this.databaseRepository.createTableIfNotExists(this.databaseName, Source.Schema.name);
         await this.databaseRepository.createTableIfNotExists(this.databaseName, News.Schema.name);
-
     }
 }

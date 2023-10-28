@@ -19,7 +19,7 @@ export const configuration: CLIConfiguration = CLIConfiguration.fromCommandLineA
 
 // Importing necessary modules and classes for database integration
 import { DatabaseRepository } from "./application/repositories/DatabaseRepository/DatabaseRepository";
-import { DatabaseForceDrop, DatabaseHost, DatabasePort } from "./config/Constants";
+import { DatabaseForceDrop, DatabaseHost, DatabasePort, Env, baseDatabaseName } from "./config/Constants";
 import { SourceRepository } from "./application/repositories/SourceRepository";
 import { Source, NewsSourceEntityType } from "./application/entities/Source";
 import { RssEmiter } from "./application/services/Rss/RssEmiter";
@@ -36,13 +36,13 @@ import { SourceRESTService } from "./application/services/REST/SourceRESTService
 import { TweetRESTService } from "./application/services/REST/TweetRESTService";
 import { TweetService } from "./application/services/TweetService";
 import { TweetRepository } from "./application/repositories/TweetRepository";
+import { ImportRESTService } from "./application/services/REST/ImportRESTService";
 
 // Asynchronous function for database operations
 (async () => {
     const dateParser = new DateUtils()
 
     // Database connection details
-    const baseDatabaseName = "NEWS_AGGREGATOR";
     const databaseName = `${configuration.env}${baseDatabaseName}`;
 
     // Creating DatabaseRepository instance for database connection
@@ -83,12 +83,14 @@ import { TweetRepository } from "./application/repositories/TweetRepository";
     const baseApi = "/api/v1";
     const sourceRestService = new SourceRESTService(sourceService, rssService);
     const tweetRestService = new TweetRESTService(tweetService);
+    const importRestService = new ImportRESTService(databaseName, databaseRepository)
 
     // Install REST endpoints
     sourceRestService.installEndpoints(baseApi, app);
     tweetRestService.installEndpoints(baseApi, app);
+    importRestService.installEndpoints(baseApi, app);
 
-    const PORT = process.env.PORT || 696;
+    const PORT = configuration.env == Env.Prod ? 996 : 696
 
     // Start the server
     app.listen(PORT, () => {

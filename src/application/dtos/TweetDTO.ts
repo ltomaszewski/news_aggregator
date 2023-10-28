@@ -12,7 +12,7 @@ export class TweetDTO {
         this.text = text;
         this.postTime = postTime;
 
-        if (!packageInfo || !ticker || !title || !text || !postTime) {
+        if (!packageInfo || !title || !text || !postTime) {
             throw new Error('All fields (packageInfo, ticker, title, text, postTime, userId) are required.');
         }
     }
