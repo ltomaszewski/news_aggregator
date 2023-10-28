@@ -5,7 +5,7 @@ export class RssEmiter {
 
     constructor() {
         this.feeder = new RssFeedEmitter({ skipFirstLoad: false });
-        this.feeder.on('error', console.error);
+        this.feeder.on('error', console.log);
     }
 
     add(url, eventName) {

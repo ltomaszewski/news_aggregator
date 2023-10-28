@@ -15,7 +15,7 @@ export class SourceService {
             try {
                 await this.save(source)
             } catch (error) {
-                console.error(error)
+                console.log(error)
             }
         }
     }

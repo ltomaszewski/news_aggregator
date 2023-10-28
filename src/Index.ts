@@ -21,12 +21,7 @@ export const configuration: CLIConfiguration = CLIConfiguration.fromCommandLineA
 import { DatabaseRepository } from "./application/repositories/DatabaseRepository/DatabaseRepository";
 import { DatabaseForceDrop, DatabaseHost, DatabasePort, Env, baseDatabaseName } from "./config/Constants";
 import { SourceRepository } from "./application/repositories/SourceRepository";
-import { Source, NewsSourceEntityType } from "./application/entities/Source";
-import { RssEmiter } from "./application/services/Rss/RssEmiter";
-import { findProp } from "./application/helpers/Utils";
 import { DateUtils } from "./application/helpers/DateParser";
-import { getUnixTime } from "date-fns";
-import { da } from "date-fns/locale";
 import { RssService } from "./application/services/Rss/RssService";
 import { SourceService } from "./application/services/SourceService";
 import { NewsService } from "./application/services/NewsService";

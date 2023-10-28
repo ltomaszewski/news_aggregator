@@ -5,7 +5,7 @@ module.exports = {
             "script": "dist/index.js",
             "args": "--runmode=producation",
             "exp_backoff_restart_delay": 10000,
-            "cron_restart": '0 1 * * *'
+            "watch": true
         }
     ]
 };
