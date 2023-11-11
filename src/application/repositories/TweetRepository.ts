@@ -42,7 +42,7 @@ export class TweetRepository implements Repository<Tweet> {
     }
 
     async findTweetWithText(text: string, postTime: number, title: string): Promise<Tweet | null> {
-        const result = await (await this.databaseRepository.query(this.databaseName, Tweet.Schema.name, function (table) { return table.filter({ postTime: postTime, text: text, title: title }); })).toArray();
+        const result = await (await this.databaseRepository.query(this.databaseName, Tweet.Schema.name, function (table) { return table.filter({ text: text, title: title }); })).toArray();
         if (result.length > 0) {
             return result[0];
         } else {

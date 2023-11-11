@@ -11,7 +11,7 @@ export class RssEmiter {
     add(url, eventName) {
         this.feeder.add({
             url: url,
-            refresh: 2000,
+            refresh: 60000,
             eventName: eventName
         });
     }

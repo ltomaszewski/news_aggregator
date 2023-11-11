@@ -21,7 +21,7 @@ export class TweetService {
                 }
             }
             this.isProcessing = false
-        }, 500);
+        }, 5000);
     }
 
     async save(tweetDTO: TweetDTO): Promise<Tweet | null> {

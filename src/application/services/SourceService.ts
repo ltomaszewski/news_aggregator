@@ -11,6 +11,12 @@ export class SourceService {
     }
 
     async insertDefaultIfNeeded() {
+        const allSources = await this.sourceRepository.getAll()
+
+        if (allSources.length > 0) {
+            return
+        }
+
         for (let source of DEFAULT_SOURCES) {
             try {
                 await this.save(source)
