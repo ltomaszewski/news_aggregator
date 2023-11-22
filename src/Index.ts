@@ -1,14 +1,5 @@
-// TODO: Finish RSS integration
-
-// TODO: Integration of economic calendar, it should act as knowledge source when news shoudl arrive or, when use webscrbe to fetch dedicated data for analyze
-
-// TODO: Add Android integration via NotificationListenerService on android via emulator or real device
-
-// TODO: when rss integration is in palce, new pice of code to open the link to content should be implmented with way to read it and summirize with AI
-
-// TODO: System to fetch data from custom website, like i.e. Fed website and minutes release. All of them should be downloader and analized with AI and compared between automaticly
-
 // Importing CLIConfiguration class for handling Command Line Interface (CLI) arguments
+import 'dotenv/config';
 import { CLIConfiguration } from "./config/CLIConfiguration";
 
 // Extracting command line arguments
@@ -21,8 +12,7 @@ export const configuration: CLIConfiguration = CLIConfiguration.fromCommandLineA
 import { DatabaseRepository } from "./application/repositories/DatabaseRepository/DatabaseRepository";
 import { DatabaseForceDrop, DatabaseHost, DatabasePort, Env, baseDatabaseName } from "./config/Constants";
 import { SourceRepository } from "./application/repositories/SourceRepository";
-import { DateUtils } from "./application/helpers/DateParser";
-import { RssService } from "./application/services/Rss/RssService";
+import { RssService } from "./application/services/rssService/RssService";
 import { SourceService } from "./application/services/SourceService";
 import { NewsService } from "./application/services/NewsService";
 import { NewsRepository } from "./application/repositories/NewsRepository";
@@ -32,11 +22,12 @@ import { TweetRESTService } from "./application/services/REST/TweetRESTService";
 import { TweetService } from "./application/services/TweetService";
 import { TweetRepository } from "./application/repositories/TweetRepository";
 import { ImportRESTService } from "./application/services/REST/ImportRESTService";
+import { ScraperItemRepository } from './application/repositories/ScraperItemRepository.js';
+import { ScraperItemService } from './application/services/websiteScraperService/ScraperItemService.js';
+import { WebsiteScraperService } from './application/services/websiteScraperService/WebsiteScraperService.js';
 
 // Asynchronous function for database operations
 (async () => {
-    const dateParser = new DateUtils()
-
     // Database connection details
     const databaseName = `${configuration.env}${baseDatabaseName}`;
 
@@ -50,10 +41,13 @@ import { ImportRESTService } from "./application/services/REST/ImportRESTService
     const sourceRepository = new SourceRepository(databaseRepository, databaseName);
     const newsRepository = new NewsRepository(databaseRepository, databaseName);
     const tweetRepository = new TweetRepository(databaseRepository, databaseName);
+    const scraperItemRepository = new ScraperItemRepository(databaseRepository, databaseName);
 
     const sourceService = new SourceService(sourceRepository);
     const newsService = new NewsService(newsRepository);
     const tweetService = new TweetService(tweetRepository);
+    const scraperItemSerivce = new ScraperItemService(scraperItemRepository);
+    const websiteScraperService = new WebsiteScraperService(scraperItemSerivce);
     const rssService = new RssService();
 
     // Init if empty some default sources
@@ -92,4 +86,5 @@ import { ImportRESTService } from "./application/services/REST/ImportRESTService
         console.log(`Server is running on port ${PORT}`);
     });
 
+    websiteScraperService.start()
 })();

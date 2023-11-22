@@ -1,5 +1,5 @@
 import { Source } from "../../entities/Source";
-import { DateUtils } from "../../helpers/DateParser";
+import { DateParser } from "../../helpers/DateParser.js";
 import { findProp } from "../../helpers/Utils";
 
 export class RssItem {
@@ -27,13 +27,13 @@ export class RssItem {
     }
 
     static fromObject(object: any, source: Source): RssItem {
-        const dateUtls = new DateUtils()
+        const dateParser = new DateParser()
         const title = object["title"]
         const link = object["link"]
         const rawPublicationDate = findProp(object, "rss:pubdate.#")
-        const publicationDate = dateUtls.parse(rawPublicationDate)
+        const publicationDate = dateParser.parse(rawPublicationDate)
         const description = findProp(object, "rss:description.#")
-        const fetchedAt = dateUtls.currentTime
+        const fetchedAt = dateParser.currentTime
         return new RssItem(title, link, publicationDate, description, fetchedAt, source)
     }
 }

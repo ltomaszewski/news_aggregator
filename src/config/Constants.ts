@@ -15,7 +15,6 @@ export const DatabaseForceDrop = false;
 
 export const baseDatabaseName = "NEWS_AGGREGATOR";
 
-
 export const DEFAULT_SOURCES: SourceDTO[] = [
     SourceDTO.createFromObject({
         name: 'investing.com',
@@ -102,3 +101,19 @@ export const DEFAULT_SOURCES: SourceDTO[] = [
         tags: ["news", "us"]
     })
 ];
+
+function getEnvVar(key: string): string {
+    const value = process.env[key];
+    if (value === undefined) {
+        throw new Error(`Environment variable ${key} is not set`);
+    }
+    return value;
+}
+
+export interface ProcessEnv {
+    NARF_AI_KEY: string;
+}
+
+export const dotEnv: ProcessEnv = {
+    NARF_AI_KEY: getEnvVar('NARF_AI_KEY')
+};

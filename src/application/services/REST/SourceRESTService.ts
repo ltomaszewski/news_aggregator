@@ -1,7 +1,7 @@
 import express from "express";
 import { SourceService } from "../SourceService";
 import { SourceDTO } from "../../dtos/SourceDTO";
-import { RssService } from "../Rss/RssService";
+import { RssService } from "../rssService/RssService";
 
 export class SourceRESTService {
     private sourceService: SourceService

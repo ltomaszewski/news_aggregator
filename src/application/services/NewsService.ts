@@ -1,6 +1,6 @@
 import { News } from "../entities/News";
 import { NewsRepository } from "../repositories/NewsRepository";
-import { RssItem } from "./Rss/RssItem";
+import { RssItem } from "./rssService/RssItem.js";
 
 export class NewsService {
     private newsRepository: NewsRepository;

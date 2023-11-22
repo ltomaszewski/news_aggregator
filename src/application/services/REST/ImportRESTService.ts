@@ -7,8 +7,8 @@ import { NewsRepository } from "../../repositories/NewsRepository";
 import { TweetRepository } from "../../repositories/TweetRepository";
 import { TweetDTO } from "../../dtos/TweetDTO";
 import { TweetService } from "../TweetService";
-import { RssItem } from "../Rss/RssItem";
 import { NewsService } from "../NewsService";
+import { RssItem } from "../rssService/RssItem.js";
 
 export class ImportRESTService {
     private databaseName: string;

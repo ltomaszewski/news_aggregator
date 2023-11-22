@@ -1,6 +1,6 @@
 import { Source } from "../../entities/Source";
-import { RssEmiter } from "./RssEmiter";
-import { RssItem } from "./RssItem";
+import { RssEmiter } from "./RssEmiter.js";
+import { RssItem } from "./RssItem.js";
 
 export class RssService {
     private _sources: Map<string, Source> = new Map();

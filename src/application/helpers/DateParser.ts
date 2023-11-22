@@ -1,6 +1,6 @@
 import { getUnixTime } from "date-fns";
 
-export class DateUtils {
+export class DateParser {
 
     parse(rawDate: string): number {
         const result = new Date(rawDate);
