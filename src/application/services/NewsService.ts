@@ -1,4 +1,5 @@
 import { News } from "../entities/News";
+import { currentTimestampAndDate } from "../helpers/Utils.js";
 import { NewsRepository } from "../repositories/NewsRepository";
 import { RssItem } from "./rssService/RssItem.js";
 
@@ -31,7 +32,7 @@ export class NewsService {
     private async saveRssItemsInDatabase(rssItem: RssItem) {
         const alreadyExisitngNews = await this.checkIfExists(rssItem)
         if (alreadyExisitngNews) {
-            console.log("News already exists " + rssItem.link + " id: " + alreadyExisitngNews.id);
+            console.log(currentTimestampAndDate() + "News already exists " + rssItem.link + " id: " + alreadyExisitngNews.id);
             return;
         }
         const publicationDate = rssItem.publicationDate;
@@ -44,7 +45,7 @@ export class NewsService {
 
         const news = new News(id, id_source, fetchedAt, publicationDate, title, description, link, []);
         await this.newsRepository.insert(news);
-        console.log("Added new news item: " + news.title);
+        console.log(currentTimestampAndDate() + "Added new news item: " + news.title);
     }
 
     private async checkIfExists(rssItem: RssItem): Promise<News | null> {

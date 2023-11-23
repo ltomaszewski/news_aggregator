@@ -2,6 +2,7 @@ import { Browser } from "puppeteer";
 import { Scraper } from "./Scarper.js";
 import { dotEnv } from "../../../../config/Constants.js";
 import { ScraperItemDTO } from "../../../dtos/ScraperItemDTO.js";
+import { currentTimestampAndDate } from "../../../helpers/Utils.js";
 
 export class ReutersScarper implements Scraper {
     private url: string;
@@ -20,12 +21,12 @@ export class ReutersScarper implements Scraper {
     async scalp(browser: Browser): Promise<ScraperItemDTO[]> {
         const page = await browser.newPage()
         page.setJavaScriptEnabled(false)
-        console.log(`Navigating to ${this.url}...`);
-        await page.goto(this.url, { waitUntil: 'domcontentloaded' }).catch(e => console.error(e));
+        console.log(currentTimestampAndDate() + `Navigating to ${this.url}...`);
+        await page.goto(this.url, { waitUntil: 'domcontentloaded' }).catch(e => console.error(currentTimestampAndDate() + e));
 
         const articles = await page.$$eval('[class^="home-page-grid__story"]', (elements) => {
             const uniqueHrefSet = new Set<string>();
-            console.log("Extracting article hrefs...");
+            console.log(currentTimestampAndDate() + "Extracting article hrefs...");
             // Use Array.from to maintain the order of elements
             return Array.from(elements, (element) => {
                 const href = element.querySelector('div > a[href]');
@@ -43,7 +44,7 @@ export class ReutersScarper implements Scraper {
         const news = articles.map(article => { return new ScraperItemDTO(article.url, article.textContents, article.time) });
 
         if (news.length == 0) {
-            console.error('ReutersScarper empty articles for url ' + this.url);
+            console.error(currentTimestampAndDate() + 'ReutersScarper empty articles for url ' + this.url);
         }
 
         return news;

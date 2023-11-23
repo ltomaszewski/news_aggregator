@@ -25,6 +25,7 @@ import { ImportRESTService } from "./application/services/REST/ImportRESTService
 import { ScraperItemRepository } from './application/repositories/ScraperItemRepository.js';
 import { ScraperItemService } from './application/services/websiteScraperService/ScraperItemService.js';
 import { WebsiteScraperService } from './application/services/websiteScraperService/WebsiteScraperService.js';
+import { currentTimestampAndDate } from './application/helpers/Utils.js';
 
 // Asynchronous function for database operations
 (async () => {
@@ -83,7 +84,7 @@ import { WebsiteScraperService } from './application/services/websiteScraperServ
 
     // Start the server
     app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
+        console.log(currentTimestampAndDate() + `Server is running on port ${PORT}`);
     });
 
     websiteScraperService.start()

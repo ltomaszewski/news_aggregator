@@ -10,7 +10,7 @@ export class ScraperItemService {
     }
 
     async insert(scraperItemDTO: ScraperItemDTO): Promise<void> {
-        const exists = await this.repository.getByUrl(scraperItemDTO.url);
+        const exists = await this.repository.getByUrlAndTitle(scraperItemDTO.url, scraperItemDTO.title ?? '');
         if (exists) {
             throw new Error("An item with the same URL already exists.");
         }

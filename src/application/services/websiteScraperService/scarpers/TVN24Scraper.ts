@@ -2,6 +2,7 @@ import { Browser } from "puppeteer";
 import { Scraper } from "./Scarper.js";
 import { dotEnv } from "../../../../config/Constants.js";
 import { ScraperItemDTO } from "../../../dtos/ScraperItemDTO.js";
+import { currentTimestampAndDate } from "../../../helpers/Utils.js";
 
 export class TVN24Scraper implements Scraper {
     private url: string;
@@ -20,9 +21,9 @@ export class TVN24Scraper implements Scraper {
     async scalp(browser: Browser): Promise<ScraperItemDTO[]> {
         const page = await browser.newPage()
         page.setJavaScriptEnabled(false)
-        console.log(`Navigating to ${this.url}...`);
+        console.log(currentTimestampAndDate() + `Navigating to ${this.url}...`);
         // Navigate to the selected page
-        await page.goto(this.url).catch(e => console.error(e));
+        await page.goto(this.url).catch(e => console.error(currentTimestampAndDate() + e));
         // Wait for the required DOM to be rendered
         await page.waitForSelector('.page-content');
 
@@ -61,7 +62,7 @@ export class TVN24Scraper implements Scraper {
             .filter((item): item is ScraperItemDTO => item !== undefined)
 
         if (news.length == 0) {
-            console.error('TVN24Scraper empty news for url ' + this.url);
+            console.error(currentTimestampAndDate() + 'TVN24Scraper empty news for url ' + this.url);
         }
 
         return news;

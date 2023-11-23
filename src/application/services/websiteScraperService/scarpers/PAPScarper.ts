@@ -2,6 +2,7 @@ import { Browser } from "puppeteer";
 import { Scraper } from "./Scarper.js";
 import { dotEnv } from "../../../../config/Constants.js";
 import { ScraperItemDTO } from "../../../dtos/ScraperItemDTO.js";
+import { currentTimestampAndDate } from "../../../helpers/Utils.js";
 
 export class PAPScarper implements Scraper {
     private url: string;
@@ -21,8 +22,8 @@ export class PAPScarper implements Scraper {
         const page = await browser.newPage()
         await page.setJavaScriptEnabled(false)
 
-        console.log(`Navigating to ${this.url}...`);
-        await page.goto(this.url, { waitUntil: 'domcontentloaded' }).catch(e => console.error(e));
+        console.log(currentTimestampAndDate() + `Navigating to ${this.url}...`);
+        await page.goto(this.url, { waitUntil: 'domcontentloaded' }).catch(e => console.error(currentTimestampAndDate() + e));
 
         const articles = await page.evaluate(() => {
             const articleElements = Array.from(document.querySelectorAll('li.news > div > div.textWrapper'));
@@ -37,7 +38,7 @@ export class PAPScarper implements Scraper {
         });
 
         if (articles.length == 0) {
-            console.error('PAPScarper empty articles for url ' + this.url);
+            console.error(currentTimestampAndDate() + 'PAPScarper empty articles for url ' + this.url);
         }
 
         const news = articles.map(article => { return new ScraperItemDTO(article.href, article.text, null, null) });

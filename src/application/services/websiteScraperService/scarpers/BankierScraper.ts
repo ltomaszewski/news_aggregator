@@ -2,6 +2,7 @@ import { Browser } from "puppeteer";
 import { Scraper } from "./Scarper.js";
 import { dotEnv } from "../../../../config/Constants.js";
 import { ScraperItemDTO } from "../../../dtos/ScraperItemDTO.js";
+import { currentTimestampAndDate } from "../../../helpers/Utils.js";
 
 export class BankierScraper implements Scraper {
     private url: string;
@@ -20,7 +21,7 @@ export class BankierScraper implements Scraper {
     async scalp(browser: Browser): Promise<ScraperItemDTO[]> {
         const page = await browser.newPage()
         page.setJavaScriptEnabled(false)
-        console.log(`Navigating to ${this.url}...`);
+        console.log(currentTimestampAndDate() + `Navigating to ${this.url}...`);
         await page.goto(this.url).catch(e => console.error(e));;
 
         const articles = await page.evaluate(() => {
@@ -40,7 +41,7 @@ export class BankierScraper implements Scraper {
         const news = articles.map(article => { return new ScraperItemDTO(article.href, article.title, article.date) });
 
         if (news.length == 0) {
-            console.error('BankierScraper empty articles for url ' + this.url);
+            console.error(currentTimestampAndDate() + 'BankierScraper empty articles for url ' + this.url);
         }
 
         return news;

@@ -7,6 +7,7 @@ import { PAPScarper } from "./scarpers/PAPScarper.js";
 import { TradingEconomicsScarper } from "./scarpers/TradingEconomicsScarper.js";
 import { randomDelay } from "../../helpers/DateUtils.js";
 import { Scraper } from "./scarpers/Scarper.js";
+import { currentTimestampAndDate } from "../../helpers/Utils.js";
 
 export class WebsiteScraperService {
     private scrapers: Scraper[];
@@ -57,11 +58,11 @@ export class WebsiteScraperService {
                     try {
                         await this.scraperItemService.insert(item);
                     } catch (error) {
-                        console.error(`Error saving item: ${error}`);
+                        console.error(currentTimestampAndDate() + `Error saving item: ${error}`);
                     }
                 }
             } catch (error) {
-                console.error(`Error executing scraper: ${error}`);
+                console.error(currentTimestampAndDate() + `Error executing scraper: ${error}`);
             }
         }
         await browser.close();

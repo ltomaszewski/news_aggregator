@@ -1,4 +1,5 @@
 import { getUnixTime } from "date-fns";
+import { currentTimestampAndDate } from "./Utils.js";
 
 export class DateParser {
 
@@ -25,7 +26,7 @@ export class DateParser {
             // JavaScript months are 0-indexed, so subtract 1 from the parsed month
             return new Date(year, month - 1, day, hours, minutes);
         } else {
-            console.error('Invalid date format');
+            console.error(currentTimestampAndDate() + 'Invalid date format');
             process.exit(0)
         }
     }

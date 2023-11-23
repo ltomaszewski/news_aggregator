@@ -16,3 +16,11 @@ export function findProp(obj: any, prop: string, defval?: any): any {
 export function isNumber(value: unknown): value is number {
     return typeof value === 'number';
 }
+
+export function currentTimestampAndDate(): string {
+    const now = new Date();
+    const timestamp = Math.floor(now.getTime() / 1000);
+    const formattedDate = now.toISOString(); // Or use any other format you prefer
+
+    return `Timestamp: ${timestamp}, Date: ${formattedDate}`;
+}

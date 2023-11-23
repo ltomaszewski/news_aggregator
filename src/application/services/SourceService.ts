@@ -1,6 +1,7 @@
 import { DEFAULT_SOURCES } from "../../config/Constants";
 import { SourceDTO } from "../dtos/SourceDTO";
 import { NewsSourceEntityType, Source } from "../entities/Source";
+import { currentTimestampAndDate } from "../helpers/Utils.js";
 import { SourceRepository } from "../repositories/SourceRepository";
 
 export class SourceService {
@@ -21,7 +22,7 @@ export class SourceService {
             try {
                 await this.save(source)
             } catch (error) {
-                console.log(error)
+                console.log(currentTimestampAndDate() + error)
             }
         }
     }

@@ -39,8 +39,8 @@ export class ScraperItemRepository implements Repository<ScraperItem> {
         return entities.length > 0 ? ScraperItem.createFromObject(entities[0]) : undefined;
     }
 
-    async getByUrl(url: string): Promise<ScraperItem | undefined> {
-        const result = await this.databaseRepository.query(this.databaseName, ScraperItem.Schema.name, (table) => table.filter({ url: url }));
+    async getByUrlAndTitle(url: string, title: string): Promise<ScraperItem | undefined> {
+        const result = await this.databaseRepository.query(this.databaseName, ScraperItem.Schema.name, (table) => table.filter({ url: url, title: title }));
         const entities = await result.toArray();
         await result.close();
         return entities.length > 0 ? ScraperItem.createFromObject(entities[0]) : undefined;

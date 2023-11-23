@@ -1,5 +1,6 @@
 import { TweetDTO } from "../dtos/TweetDTO";
 import { Tweet } from "../entities/Tweet";
+import { currentTimestampAndDate } from "../helpers/Utils.js";
 import { TweetRepository } from "../repositories/TweetRepository";
 
 export class TweetService {
@@ -27,7 +28,7 @@ export class TweetService {
     async save(tweetDTO: TweetDTO): Promise<Tweet | null> {
         const tweetClone = await this.tweetRepository.findTweetWithText(tweetDTO.text, tweetDTO.postTime, tweetDTO.title)
         if (tweetClone) {
-            console.log("Tweet with this link already exists: " + tweetDTO);
+            console.log(currentTimestampAndDate() + "Tweet with this link already exists: " + tweetDTO);
             return null
         }
         const allTweets = await this.tweetRepository.getAll()
@@ -40,9 +41,9 @@ export class TweetService {
     enqueueAndSave(tweetDTO: TweetDTO) {
         if (!this.isTweetInQueue(tweetDTO)) {
             this.queue.push(tweetDTO);
-            console.log('Tweet added to the queue:', tweetDTO);
+            console.log(currentTimestampAndDate() + 'Tweet added to the queue:', tweetDTO);
         } else {
-            console.log('Similar tweet already exists in the queue. Not adding:', tweetDTO);
+            console.log(currentTimestampAndDate() + 'Similar tweet already exists in the queue. Not adding:', tweetDTO);
         }
     }
 
