@@ -22,7 +22,11 @@
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.19",
+    "@types/npm": "^7.19.3",
     "@types/puppeteer": "^7.0.4",
-    "typescript": "^5.2.2"
+    "@types/user-agents": "^1.0.4",
+    "install": "^0.13.0",
+    "typescript": "^5.2.2",
+    "user-agents": "^1.1.36"
   }
 }

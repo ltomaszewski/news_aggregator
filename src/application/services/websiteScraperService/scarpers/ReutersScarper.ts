@@ -3,6 +3,7 @@ import { Scraper } from "./Scarper.js";
 import { dotEnv } from "../../../../config/Constants.js";
 import { ScraperItemDTO } from "../../../dtos/ScraperItemDTO.js";
 import { currentTimestampAndDate } from "../../../helpers/Utils.js";
+import UserAgent from "user-agents";
 
 export class ReutersScarper implements Scraper {
     private url: string;
@@ -21,6 +22,10 @@ export class ReutersScarper implements Scraper {
     async scalp(browser: Browser): Promise<ScraperItemDTO[]> {
         const page = await browser.newPage()
         page.setJavaScriptEnabled(false)
+        const userAgent = new UserAgent({ deviceCategory: 'desktop' }); // You can specify the device category
+        const randomUserAgent = userAgent.toString();
+        page.setUserAgent(randomUserAgent)
+
         console.log(currentTimestampAndDate() + `Navigating to ${this.url}...`);
         await page.goto(this.url, { waitUntil: 'domcontentloaded' }).catch(e => console.error(currentTimestampAndDate() + e));
 
