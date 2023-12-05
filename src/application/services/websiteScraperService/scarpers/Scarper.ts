@@ -1,6 +1,6 @@
-import { Browser } from "puppeteer";
+import { Browser, Page } from "puppeteer";
 import { ScraperItemDTO } from "../../../dtos/ScraperItemDTO.js";
 
 export interface Scraper {
-    scalp(browser: Browser): Promise<ScraperItemDTO[]>;
+    scalp(page: Page): Promise<ScraperItemDTO[]>;
 }

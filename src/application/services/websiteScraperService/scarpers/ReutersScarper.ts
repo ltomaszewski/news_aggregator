@@ -1,4 +1,4 @@
-import { Browser } from "puppeteer";
+import { Browser, Page } from "puppeteer";
 import { Scraper } from "./Scarper.js";
 import { dotEnv } from "../../../../config/Constants.js";
 import { ScraperItemDTO } from "../../../dtos/ScraperItemDTO.js";
@@ -18,9 +18,7 @@ export class ReutersScarper implements Scraper {
         }
     }
 
-    async scalp(browser: Browser): Promise<ScraperItemDTO[]> {
-        const page = await browser.newPage()
-        page.setJavaScriptEnabled(false)
+    async scalp(page: Page): Promise<ScraperItemDTO[]> {
         const userAgent = new UserAgent({ deviceCategory: 'desktop' }); // You can specify the device category
         const randomUserAgent = userAgent.toString();
         page.setUserAgent(randomUserAgent);

@@ -50,22 +50,29 @@ export class WebsiteScraperService {
                 `--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15`
             ]
         });
-        for (const scraper of this.scrapers) {
-            await randomDelay()
-            try {
-                const items = await scraper.scalp(browser);
-                for (const item of items) {
-                    try {
-                        await this.scraperItemService.insert(item);
-                    } catch (error) {
-                        console.error(currentTimestampAndDate() + `Error saving item: ${error}`);
+        try {
+            for (const scraper of this.scrapers) {
+                await randomDelay()
+                const page = await browser.newPage()
+                page.setJavaScriptEnabled(false)
+                try {
+                    const items = await scraper.scalp(page);
+                    for (const item of items) {
+                        try {
+                            await this.scraperItemService.insert(item);
+                        } catch (error) {
+                            console.error(currentTimestampAndDate() + `Error saving item: ${error}`);
+                        }
                     }
+                } catch (error) {
+                    console.error(currentTimestampAndDate() + `Error executing scraper: ${error}`);
+                } finally {
+                    await page.close();
                 }
-            } catch (error) {
-                console.error(currentTimestampAndDate() + `Error executing scraper: ${error}`);
             }
+        } finally {
+            await browser.close();
         }
-        await browser.close();
     }
 
     private getRandomInterval(min: number, max: number): number {

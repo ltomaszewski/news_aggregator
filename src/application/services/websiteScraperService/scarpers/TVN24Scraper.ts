@@ -1,4 +1,4 @@
-import { Browser } from "puppeteer";
+import { Browser, Page } from "puppeteer";
 import { Scraper } from "./Scarper.js";
 import { dotEnv } from "../../../../config/Constants.js";
 import { ScraperItemDTO } from "../../../dtos/ScraperItemDTO.js";
@@ -18,9 +18,7 @@ export class TVN24Scraper implements Scraper {
         }
     }
 
-    async scalp(browser: Browser): Promise<ScraperItemDTO[]> {
-        const page = await browser.newPage()
-        page.setJavaScriptEnabled(false)
+    async scalp(page: Page): Promise<ScraperItemDTO[]> {
         console.log(currentTimestampAndDate() + `Navigating to ${this.url}...`);
         // Navigate to the selected page
         await page.goto(this.url).catch(e => console.error(currentTimestampAndDate() + e));
